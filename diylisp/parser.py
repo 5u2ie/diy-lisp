@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
+# nosetests tests/test_1_parsing.py --stop
 import re
 from ast import is_boolean, is_list
 from types import LispError
+
 
 """
 This is the parser module, with the `parse` function which you'll implement as part 1 of
@@ -10,9 +11,47 @@ the workshop. Its job is to convert strings into data structures that the evalua
 understand. 
 """
 
+## expressions
+integer = re.compile('[0-9]+')
+symbol = re.compile('[a-zA-Z*<>/+-=]+')
+
+
 def parse(source):
     """Parse string representation of one *single* expression
     into the corresponding Abstract Syntax Tree."""
+
+    ## clearing up
+    source = remove_comments(source)
+    source = source.strip()
+
+    ## parsing booleans
+    if source == ('#t'):
+        source = True
+    elif source == ('#f'):
+        source = False
+
+    ## parsing integers and symbols
+    elif re.match(integer, source):
+        source = int(source)
+    elif re.match(symbol, source):
+        source = source
+
+    ## parsing a list of symbols
+    elif source[0] == '(':
+        closingPar = find_matching_paren(source)
+        if closingPar != len(source) - 1:
+            raise LispError("Expected EOF")
+        ## parsing between the parentheses
+        source = [parse(symbols) for symbols in split_exps(source[1:closingPar])]
+
+    ## expanding single quoted symbols
+    elif source[0] == "'":
+        expandQ = "(quote " + source[1:] + ")"
+        source = parse(expandQ)
+
+    return source
+
+
 
     raise NotImplementedError("DIY")
 
@@ -41,6 +80,7 @@ def find_matching_paren(source, start=0):
             open_brackets += 1
         if source[pos] == ')':
             open_brackets -= 1
+
     return pos
 
 def split_exps(source):
