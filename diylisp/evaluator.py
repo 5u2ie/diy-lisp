@@ -35,4 +35,36 @@ def evaluate(ast, env):
         aste = [evaluate(s, env) for s in ast[1:]]
         return is_atom(aste[0]) and aste[0] == aste[1]
 
+    # evaluating basic math operators
+    if ast[0] == "+":
+        if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
+            return evaluate(ast[1], env) + evaluate(ast[2], env)
+        else: raise LispError('Arguments must be integers')
+
+    if ast[0] == "-":
+        if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
+            return evaluate(ast[1], env) - evaluate(ast[2], env)
+        else: raise LispError('Arguments must be integers')
+
+    if ast[0] == "*":
+        if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
+            return evaluate(ast[1], env) * evaluate(ast[2], env)
+        else: raise LispError('Arguments must be integers')
+
+    if ast[0] == "mod":
+        if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
+            return evaluate(ast[1], env) % evaluate(ast[2], env)
+        else: raise LispError('Arguments must be integers')
+
+    if ast[0] == "/":
+        if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
+            return evaluate(ast[1], env) / evaluate(ast[2], env)
+        else: raise LispError('Arguments must be integers')
+
+    if ast[0] == ">":
+        return evaluate(ast[1], env) > evaluate(ast[2], env)
+    if ast[0] == "<":
+        return evaluate(ast[1], env) < evaluate(ast[2], env)
+
+
     raise NotImplementedError("DIY")
