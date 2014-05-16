@@ -1,5 +1,5 @@
+__author__ = 'Zsuzsanna'
 # -*- coding: utf-8 -*-
-# nosetests tests/test_2_evaluating_simple_expressions.py --stop
 
 from types import Environment, LispError, Closure
 from ast import is_boolean, is_atom, is_symbol, is_list, is_closure, is_integer
@@ -10,8 +10,8 @@ from parser import unparse
 This is the Evaluator module. The `evaluate` function below is the heart
 of your language, and the focus for most of parts 2 through 6.
 
-A score of useful functions is provided for you, as per the above imports, 
-making your work a bit easier. (We're supposed to get through this thing 
+A score of useful functions is provided for you, as per the above imports,
+making your work a bit easier. (We're supposed to get through this thing
 in a day, after all.)
 """
 
@@ -29,42 +29,52 @@ def evaluate(ast, env):
         return ast[1]
 
     # evaluating atom and eq functions
-    if ast[0] == "atom":
+    elif ast[0] == "atom":
         return is_atom(evaluate(ast[1], env))
-    if ast[0] == "eq":
+    elif ast[0] == "eq":
         aste = [evaluate(s, env) for s in ast[1:]]
         return is_atom(aste[0]) and aste[0] == aste[1]
 
     # evaluating basic math operators
-    if ast[0] == "+":
+    elif ast[0] == "+":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) + evaluate(ast[2], env)
         else: raise LispError('Arguments must be integers')
 
-    if ast[0] == "-":
+    elif ast[0] == "-":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) - evaluate(ast[2], env)
         else: raise LispError('Arguments must be integers')
 
-    if ast[0] == "*":
+    elif ast[0] == "*":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) * evaluate(ast[2], env)
         else: raise LispError('Arguments must be integers')
 
-    if ast[0] == "mod":
+    elif ast[0] == "mod":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) % evaluate(ast[2], env)
         else: raise LispError('Arguments must be integers')
 
-    if ast[0] == "/":
+    elif ast[0] == "/":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) / evaluate(ast[2], env)
         else: raise LispError('Arguments must be integers')
 
-    if ast[0] == ">":
+    elif ast[0] == ">":
         return evaluate(ast[1], env) > evaluate(ast[2], env)
-    if ast[0] == "<":
+    elif ast[0] == "<":
         return evaluate(ast[1], env) < evaluate(ast[2], env)
+
+    # Evaluating complex expressions
+    # basic if statement
+
+    elif ast[0] == 'if':
+        if (evaluate(ast[1], env)) is True:
+            return (evaluate (ast[2], env))
+        else:
+            return (evaluate (ast[3], env))
+
 
 
     raise NotImplementedError("DIY")
