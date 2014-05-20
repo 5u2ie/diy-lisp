@@ -31,7 +31,11 @@ class Environment:
             raise LispError(format(symbol))
 
     def extend(self, variables):
-        raise NotImplementedError("DIY")
+        # The `extend` function returns a new environment,
+        env = self.variables.copy()
+        # extended with more bindings.
+        extenv = dict(self.variables.items() + variables.items())
+        return Environment(extenv)
 
     def set(self, symbol, value):
         raise NotImplementedError("DIY")
