@@ -80,4 +80,6 @@ def evaluate(ast, env):
     elif ast[0] == 'define':
         if len(ast) == 3 and is_symbol(ast[1]):
 		    return env.set(ast[1], evaluate(ast[2], env))
-
+        elif len(ast) != 3:
+            raise LispError("Wrong number of arguments")
+        else: raise LispError ("non-symbol")
