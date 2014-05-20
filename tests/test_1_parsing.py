@@ -5,13 +5,7 @@ from nose.tools import assert_equals, assert_raises_regexp
 from diylisp.parser import parse, unparse
 from diylisp.types import LispError
 
-def test_parse_single_symbol():
-    """Parsing a single symbol.
 
-    Symbols are represented by text strings. Parsing a single atom should result
-    in an AST consisting of only that symbol."""
-
-    assert_equals('foo', parse('foo'))
 
 def test_parse_boolean():
     """Parsing single booleans.
@@ -21,6 +15,14 @@ def test_parse_boolean():
 
     assert_equals(True, parse('#t'))
     assert_equals(False, parse('#f'))
+
+def test_parse_single_symbol():
+    """Parsing a single symbol.
+
+    Symbols are represented by text strings. Parsing a single atom should result
+    in an AST consisting of only that symbol."""
+
+    assert_equals('foo', parse('foo'))
 
 def test_parse_integer():
     """Parsing single integer.

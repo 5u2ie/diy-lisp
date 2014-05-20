@@ -31,11 +31,12 @@ class Environment:
             raise LispError(format(symbol))
 
     def extend(self, variables):
-        # The `extend` function returns a new environment,
-        env = self.variables.copy()
-        # extended with more bindings.
+        # extending a new environment with more bindings.
         extenv = dict(self.variables.items() + variables.items())
         return Environment(extenv)
 
     def set(self, symbol, value):
-        raise NotImplementedError("DIY")
+        if symbol in self.variables:
+            raise LispError("Variable already defined")
+        else:
+            self.variables[symbol] = value
