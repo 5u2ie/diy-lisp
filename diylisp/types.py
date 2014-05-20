@@ -28,8 +28,7 @@ class Environment:
         if symbol in self.variables:
             return self.variables[symbol]
         else:
-            raise LispError('Symbol not in the environment')
-
+            raise LispError(format(symbol))
 
     def extend(self, variables):
         raise NotImplementedError("DIY")
