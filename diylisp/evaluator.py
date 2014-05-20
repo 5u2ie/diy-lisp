@@ -1,4 +1,4 @@
-y__author__ = 'Zsuzsanna'
+__author__ = 'Zsuzsanna'
 # -*- coding: utf-8 -*-
 
 from types import Environment, LispError, Closure
@@ -75,6 +75,9 @@ def evaluate(ast, env):
         else:
             return (evaluate (ast[3], env))
 
+    # functions
 
+    elif ast[0] == 'define':
+        if len(ast) == 3 and is_symbol(ast[1]):
+		    return env.set(ast[1], evaluate(ast[2], env))
 
-    raise NotImplementedError("DIY")
