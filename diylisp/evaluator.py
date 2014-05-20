@@ -1,4 +1,4 @@
-__author__ = 'Zsuzsanna'
+y__author__ = 'Zsuzsanna'
 # -*- coding: utf-8 -*-
 
 from types import Environment, LispError, Closure
@@ -24,7 +24,7 @@ def evaluate(ast, env):
     elif is_integer(ast):
         return ast
     elif is_symbol(ast):
-        return ast
+        return env.lookup(ast)
     elif ast[0] == "quote":
         return ast[1]
 

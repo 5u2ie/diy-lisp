@@ -37,6 +37,6 @@ class Environment:
 
     def set(self, symbol, value):
         if symbol in self.variables:
-            raise LispError("Variable already defined")
+            raise LispError("already defined")
         else:
             self.variables[symbol] = value
