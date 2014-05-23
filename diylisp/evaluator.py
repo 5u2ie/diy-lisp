@@ -39,27 +39,32 @@ def evaluate(ast, env):
     elif ast[0] == "+":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) + evaluate(ast[2], env)
-        else: raise LispError('Arguments must be integers')
+        else:
+            raise LispError('Arguments must be integers')
 
     elif ast[0] == "-":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) - evaluate(ast[2], env)
-        else: raise LispError('Arguments must be integers')
+        else:
+            raise LispError('Arguments must be integers')
 
     elif ast[0] == "*":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) * evaluate(ast[2], env)
-        else: raise LispError('Arguments must be integers')
+        else:
+            raise LispError('Arguments must be integers')
 
     elif ast[0] == "mod":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) % evaluate(ast[2], env)
-        else: raise LispError('Arguments must be integers')
+        else:
+            raise LispError('Arguments must be integers')
 
     elif ast[0] == "/":
         if is_integer(evaluate(ast[1], env)) and is_integer(evaluate(ast[2], env)):
             return evaluate(ast[1], env) / evaluate(ast[2], env)
-        else: raise LispError('Arguments must be integers')
+        else:
+            raise LispError('Arguments must be integers')
 
     elif ast[0] == ">":
         return evaluate(ast[1], env) > evaluate(ast[2], env)
@@ -71,15 +76,39 @@ def evaluate(ast, env):
 
     elif ast[0] == 'if':
         if (evaluate(ast[1], env)) is True:
-            return (evaluate (ast[2], env))
+            return evaluate(ast[2], env)
         else:
-            return (evaluate (ast[3], env))
+            return evaluate(ast[3], env)
 
     # functions
 
     elif ast[0] == 'define':
         if len(ast) == 3 and is_symbol(ast[1]):
-		    return env.set(ast[1], evaluate(ast[2], env))
+            return env.set(ast[1], evaluate(ast[2], env))
         elif len(ast) != 3:
             raise LispError("Wrong number of arguments")
-        else: raise LispError ("non-symbol")
+        else:
+            raise LispError("Non-symbol")
+
+    # evaluating a list in which the first element is a closure
+
+    elif ast[0] == 'closure':
+        closure = ast[0]
+        if len(ast[1:]) != len(closure.params):
+            raise LispError('Wrong number of arguments')
+
+        bindings = {}
+        for x in ast[1:]:
+            arg1 = evaluate(x, env)
+            param1 = closure.params[x]
+            bindings.update({param1: arg1})
+        return evaluate(closure.body, closure.env.extend(bindings))
+
+    elif ast[0] == 'lambda':
+        if not is_list(ast[1]):
+            raise LispError('not a list')
+        if len(ast) == 3:
+            return Closure(env, ast[1], ast[2])
+        else:
+            raise LispError('number of arguments')
+
