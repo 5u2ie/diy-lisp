@@ -117,9 +117,34 @@ def evaluate(ast, env):
             else:
                 raise LispError('number of arguments')
 
+        # new forms such as cons, head, tail and empty
+
+        elif ast[0] == "cons":
+            if len(ast) != 3:
+                raise LispError("expected 2 arguments")
+            else:
+                list = [evaluate(x, env) for x in ast[1:]]
+                return [list[0]] + list[1]
+
+        elif ast[0] == "head":
+            list = [evaluate(x, env) for x in ast[1:]]
+            if list[0] == []:
+                raise LispError('empty list')
+            return list[0][0]
+
+        elif ast[0] == "tail":
+            list = evaluate(ast[1], env)
+            if list == []:
+                raise LispError('empty list')
+            else:
+                return list[1:]
+
+        elif ast[0] == "empty":
+            list = evaluate(ast[1], env)
+            return (list == [])
+
         elif is_symbol(ast[0]) or is_list(ast[0]):
             closure = evaluate(ast[0], env)
             return evaluate([closure] + ast[1:], env)
-
         else:
             raise LispError("not a function")
